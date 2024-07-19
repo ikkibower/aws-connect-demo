@@ -162,3 +162,12 @@ packaged.yaml
 
 # python
 **/python
+
+
+### TF ###
+terraform/.terraform*
+terraform/terraform*
+/terraform/*.zip
+terraform/tfplan.json
+terraform/us-west-2.plan.cache
+terraform/.aws-sam-iacs

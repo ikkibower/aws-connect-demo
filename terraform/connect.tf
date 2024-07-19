@@ -6,10 +6,10 @@ resource "aws_connect_instance" "example" {
 }
 
 resource "aws_connect_contact_flow" "example" {
-  instance_id   = aws_connect_instance.example.id
-  name          = "ExampleContactFlow"
-  description   = "Example contact flow"
-  content       = <<EOF
+  instance_id = aws_connect_instance.example.id
+  name        = "ExampleContactFlow"
+  description = "Example contact flow"
+  content     = <<EOF
 {
   "Version": "2019-10-31",
   "StartAction": {
