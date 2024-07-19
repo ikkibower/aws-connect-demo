@@ -159,3 +159,6 @@ packaged.yaml
 
 ##visualstudiocode workspace file
 .vscode/
+
+# python
+**/python
