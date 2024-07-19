@@ -1,0 +1,22 @@
+{
+    "currentIntent": {
+        "name": "BookHotel",
+        "slots": {
+            "Location": "New York",
+            "CheckInDate": "2024-08-15",
+            "Nights": "3"
+        },
+        "confirmationStatus": "None"
+    },
+    "inputTranscript": "I want to book a hotel",
+    "bot": {
+        "name": "HotelBookingBot",
+        "alias": "$LATEST",
+        "version": "1"
+    },
+    "userId": "testUser",
+    "outputDialogMode": "Text",
+    "messageVersion": "1.0",
+    "invocationSource": "DialogCodeHook",
+    "sessionAttributes": {}
+}
