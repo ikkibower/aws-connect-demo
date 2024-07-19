@@ -1,6 +1,8 @@
 resource "aws_connect_instance" "example" {
   identity_management_type = "CONNECT_MANAGED"
+  inbound_calls_enabled    = true
   instance_alias           = var.connect_instance_name
+  outbound_calls_enabled   = true
 }
 
 resource "aws_connect_contact_flow" "example" {
