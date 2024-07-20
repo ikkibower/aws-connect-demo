@@ -1,3 +1,7 @@
+module "lex_bot" {
+  source = "../lex-bot"
+}
+
 resource "aws_connect_instance" "example" {
   identity_management_type = "CONNECT_MANAGED"
   inbound_calls_enabled    = true
@@ -15,7 +19,7 @@ resource "aws_connect_contact_flow" "example" {
   "StartAction": {
     "ActionType": "ConnectBot",
     "Parameters": {
-      "BotAliasArn": "${aws_lex_bot.example.arn}"
+      "BotAliasArn": "${module.lex_bot.lex_bot_arn}"
     }
   }
   // Add additional actions and steps here

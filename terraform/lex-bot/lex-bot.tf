@@ -28,7 +28,3 @@ resource "aws_lex_bot" "example" {
   process_behavior = "BUILD"
   voice_id         = "Salli"
 }
-
-output "lex_bot_id" {
-  value = aws_lex_bot.example.id
-}
