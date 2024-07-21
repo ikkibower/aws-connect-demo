@@ -7,7 +7,7 @@ resource "aws_lambda_function" "book_hotel_lambda" {
   source_code_hash = filebase64sha256("../lambdas/book-hotel/lambda.zip")
   environment {
     variables = {
-      foo = "bar"
+      test = "test"
     }
   }
 }

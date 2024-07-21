@@ -13,6 +13,7 @@ resource "aws_lexv2models_bot" "book_hotel_bot" {
 }
 
 resource "aws_lexv2models_bot_locale" "book_hotel_bot_locale" {
+  # depends_on = [ aws_lexv2models_bot_version.book_hotel_bot_version ]
   bot_id                           = aws_lexv2models_bot.book_hotel_bot.id
   bot_version                      = "DRAFT"
   locale_id                        = "en_US"
@@ -24,7 +25,8 @@ resource "aws_lexv2models_bot_locale" "book_hotel_bot_locale" {
 }
 
 resource "aws_lexv2models_bot_version" "book_hotel_bot_version" {
-  bot_id = aws_lexv2models_bot.book_hotel_bot.id
+  depends_on = [aws_lexv2models_bot.book_hotel_bot]
+  bot_id     = aws_lexv2models_bot.book_hotel_bot.id
   locale_specification = {
     "en_US" = {
       source_bot_version = "DRAFT"
@@ -33,9 +35,13 @@ resource "aws_lexv2models_bot_version" "book_hotel_bot_version" {
 }
 
 resource "aws_lexv2models_intent" "book_hotel_bot_intent" {
-  bot_id      = aws_lexv2models_bot.book_hotel_bot.id
-  bot_version = aws_lexv2models_bot_version.book_hotel_bot_version.bot_version
-  locale_id   = aws_lexv2models_bot_locale.book_hotel_bot_locale.id
+  depends_on = [aws_lexv2models_bot_locale.book_hotel_bot_locale]
+  bot_id     = aws_lexv2models_bot.book_hotel_bot.id
+  # bot_version = aws_lexv2models_bot_version.book_hotel_bot_version.bot_version
+  bot_version = "DRAFT"
+  # locale_id   = aws_lexv2models_bot_locale.book_hotel_bot_locale.id
+  locale_id = "en_US"
+
   name        = "BookHotel"
   description = "Intent to book a hotel"
 
@@ -46,6 +52,13 @@ resource "aws_lexv2models_intent" "book_hotel_bot_intent" {
       allow_interrupt            = true
       max_retries                = 1
       message_selection_strategy = "Ordered"
+      message_group {
+        message {
+          plain_text_message {
+            value = "Do you want to book a hotel?"
+          }
+        }
+      }
 
       prompt_attempts_specification {
         allow_interrupt = true
@@ -129,7 +142,7 @@ resource "aws_lexv2models_intent" "book_hotel_bot_intent" {
     fulfillment_updates_specification {
       active = true
       start_response {
-        delay_in_seconds = 0
+        delay_in_seconds = 1
         message_group {
           message {
             plain_text_message {
@@ -162,12 +175,6 @@ resource "aws_lexv2models_intent" "book_hotel_bot_intent" {
   sample_utterance {
     utterance = "I need a hotel room in {Location} from {CheckInDate} for {Nights} nights"
   }
-
-  # sample_utterances = [
-  #   "I want to book a hotel",
-  #   "Book a hotel in {Location}",
-  #   "I need a hotel room in {Location} from {CheckInDate} for {Nights} nights"
-  # ]
 
   # fulfillment_activity {
   #   type = "CodeHook"
@@ -209,12 +216,14 @@ resource "aws_lexv2models_intent" "book_hotel_bot_intent" {
 }
 
 resource "aws_lexv2models_slot" "book_hotel_location_slot" {
-  bot_id       = aws_lexv2models_bot.book_hotel_bot.id
-  bot_version  = aws_lexv2models_bot_version.book_hotel_bot_version.bot_version
-  locale_id    = aws_lexv2models_bot_locale.book_hotel_bot_locale.id
-  intent_id    = aws_lexv2models_intent.book_hotel_bot_intent.id
-  name         = "Location"
-  description  = "A city for booking a hotel"
+  depends_on  = [aws_lexv2models_bot_locale.book_hotel_bot_locale]
+  bot_id      = aws_lexv2models_bot.book_hotel_bot.id
+  bot_version = "DRAFT"
+  locale_id   = "en_US"
+
+  intent_id   = aws_lexv2models_intent.book_hotel_bot_intent.intent_id
+  name        = "Location"
+  description = "A city for booking a hotel"
   obfuscation_setting {
     obfuscation_setting_type = "None"
   }
@@ -235,12 +244,13 @@ resource "aws_lexv2models_slot" "book_hotel_location_slot" {
 }
 
 resource "aws_lexv2models_slot" "book_hotel_checkin_slot" {
-  bot_id       = aws_lexv2models_bot.book_hotel_bot.id
-  bot_version  = aws_lexv2models_bot_version.book_hotel_bot_version.bot_version
-  locale_id    = aws_lexv2models_bot_locale.book_hotel_bot_locale.id
-  intent_id    = aws_lexv2models_intent.book_hotel_bot_intent.id
-  name         = "CheckInDate"
-  description  = "Check in date for booking a hotel"
+  depends_on  = [aws_lexv2models_bot_locale.book_hotel_bot_locale]
+  bot_id      = aws_lexv2models_bot.book_hotel_bot.id
+  bot_version = "DRAFT"
+  locale_id   = "en_US"
+  intent_id   = aws_lexv2models_intent.book_hotel_bot_intent.intent_id
+  name        = "CheckInDate"
+  description = "Check in date for booking a hotel"
   obfuscation_setting {
     obfuscation_setting_type = "None"
   }
@@ -260,12 +270,13 @@ resource "aws_lexv2models_slot" "book_hotel_checkin_slot" {
 }
 
 resource "aws_lexv2models_slot" "book_hotel_nights_slot" {
-  bot_id       = aws_lexv2models_bot.book_hotel_bot.id
-  bot_version  = aws_lexv2models_bot_version.book_hotel_bot_version.bot_version
-  locale_id    = aws_lexv2models_bot_locale.book_hotel_bot_locale.id
-  intent_id    = aws_lexv2models_intent.book_hotel_bot_intent.id
-  name         = "Nights"
-  description  = "Number of nights for booking a hotel"
+  depends_on  = [aws_lexv2models_bot_locale.book_hotel_bot_locale]
+  bot_id      = aws_lexv2models_bot.book_hotel_bot.id
+  bot_version = "DRAFT"
+  locale_id   = "en_US"
+  intent_id   = aws_lexv2models_intent.book_hotel_bot_intent.intent_id
+  name        = "Nights"
+  description = "Number of nights for booking a hotel"
   obfuscation_setting {
     obfuscation_setting_type = "None"
   }
@@ -285,28 +296,20 @@ resource "aws_lexv2models_slot" "book_hotel_nights_slot" {
 }
 
 resource "aws_lexv2models_slot_type" "city_slot_type" {
-  name = "CitySlotType"
-  bot_id         = aws_lexv2models_bot.book_hotel_bot.id
-  bot_version    = aws_lexv2models_bot_version.book_hotel_bot_version.bot_version
-  locale_id      = "en_US"
-
-  # sample_value {
-  #   value = "New York"
-  # }
-  # synonyms = [
-  #   "New York City",
-  #   "NYC"
-  # ]
-  # }
+  depends_on  = [aws_lexv2models_bot_locale.book_hotel_bot_locale]
+  name        = "CitySlotType"
+  bot_id      = aws_lexv2models_bot.book_hotel_bot.id
+  bot_version = "DRAFT"
+  locale_id   = "en_US"
+  value_selection_setting {
+    resolution_strategy = "OriginalValue"
+  }
   # slot_type_values {
-  #   sample_value {
-  #     value = "San Francisco"
-  #   }
+  #   value = "San Francisco"
   #   synonyms = [
   #     "San Francisco",
   #     "SF"
   #   ]
-  # }
   # slot_type_values {
   #   sample_value {
   #     value = "Seattle"
@@ -318,23 +321,29 @@ resource "aws_lexv2models_slot_type" "city_slot_type" {
 }
 
 resource "aws_lexv2models_slot_type" "date_slot_type" {
-  name = "DateSlotType"
-  bot_id         = aws_lexv2models_bot.book_hotel_bot.id
-  bot_version    = aws_lexv2models_bot_version.book_hotel_bot_version.bot_version
-  locale_id      = "en_US"
+  name        = "DateSlotType"
+  bot_id      = aws_lexv2models_bot.book_hotel_bot.id
+  bot_version = "DRAFT"
+  locale_id   = "en_US"
+  value_selection_setting {
+    resolution_strategy = "OriginalValue"
+  }
 }
 
 resource "aws_lexv2models_slot_type" "number_slot_type" {
-  name = "NumberSlotType"
-  bot_id         = aws_lexv2models_bot.book_hotel_bot.id
-  bot_version    = aws_lexv2models_bot_version.book_hotel_bot_version.bot_version
-  locale_id      = "en_US"
+  name        = "NumberSlotType"
+  bot_id      = aws_lexv2models_bot.book_hotel_bot.id
+  bot_version = "DRAFT"
+  locale_id   = "en_US"
+  value_selection_setting {
+    resolution_strategy = "OriginalValue"
+  }
 }
 
 
 resource "aws_iam_role" "lex_bot_role" {
   name = "lex_bot_role"
-  
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -352,5 +361,5 @@ resource "aws_iam_role" "lex_bot_role" {
 
 resource "aws_iam_role_policy_attachment" "lex_bot_policy_attachment" {
   role       = aws_iam_role.lex_bot_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonLexFullAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonLexFullAccess"
 }

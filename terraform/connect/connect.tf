@@ -28,9 +28,15 @@ resource "aws_connect_contact_flow" "example_contact_flow" {
       "BotAliasArn": "${module.lex_bot.lex_bot_arn}"
     }
   }
-  // Add additional actions and steps here
 }
 EOF
+}
+
+resource "aws_connect_phone_number" "test_tfn" {
+  target_arn   = aws_connect_instance.test_connect_instance.arn
+  country_code = "US"
+  type         = "DID"
+  prefix       = "+18005"
 }
 
 output "connect_instance_id" {
@@ -40,3 +46,4 @@ output "connect_instance_id" {
 output "contact_flow_id" {
   value = aws_connect_contact_flow.example_contact_flow.id
 }
+
