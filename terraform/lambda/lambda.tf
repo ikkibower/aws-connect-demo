@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "book_hotel_lambda" {
-  filename         = "lambda.zip"
+  filename         = "../lambdas/book-hotel/lambda.zip"
   function_name    = var.lambda_function_name
   role             = aws_iam_role.lambda_exec.arn
   handler          = "lambda_function.lambda_handler"

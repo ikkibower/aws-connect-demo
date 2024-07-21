@@ -1,16 +1,22 @@
+locals {
+  instance_alias = "ZWxsaW90dHN0ZXN0aW5zdGFuZQo"
+}
+
 module "lex_bot" {
   source = "../lex-bot"
 }
 
-resource "aws_connect_instance" "example" {
+resource "aws_connect_instance" "test_connect_instance" {
   identity_management_type = "CONNECT_MANAGED"
   inbound_calls_enabled    = true
-  instance_alias           = var.connect_instance_name
+  instance_alias           = local.instance_alias
   outbound_calls_enabled   = true
 }
 
-resource "aws_connect_contact_flow" "example" {
-  instance_id = aws_connect_instance.example.id
+
+
+resource "aws_connect_contact_flow" "example_contact_flow" {
+  instance_id = aws_connect_instance.test_connect_instance.id
   name        = "ExampleContactFlow"
   description = "Example contact flow"
   content     = <<EOF
@@ -28,9 +34,9 @@ EOF
 }
 
 output "connect_instance_id" {
-  value = aws_connect_instance.example.id
+  value = aws_connect_instance.test_connect_instance.id
 }
 
 output "contact_flow_id" {
-  value = aws_connect_contact_flow.example.id
+  value = aws_connect_contact_flow.example_contact_flow.id
 }
