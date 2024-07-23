@@ -13,3 +13,7 @@ module "lambda_functions" {
 module "connect" {
   source = "./connect"
 }
+
+module "dynamodb" {
+  source = "./dynamodb"
+}

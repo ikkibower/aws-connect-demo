@@ -1,5 +1,5 @@
 resource "aws_connect_contact_flow" "landing_contact_flow" {
-  depends_on = [ aws_connect_lambda_function_association.flow_invocation_lambda_connect_association,  aws_connect_instance.test_connect_instance ]
+  depends_on  = [aws_connect_lambda_function_association.flow_invocation_lambda_connect_association, aws_connect_instance.test_connect_instance]
   instance_id = aws_connect_instance.test_connect_instance.id
   name        = "LandingContactFlow"
   description = "Landing contact flow"
