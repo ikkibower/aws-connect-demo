@@ -6,8 +6,8 @@ module "lex_bot" {
   source = "./lex-bot"
 }
 
-module "lambda_function" {
-  source = "./lambda"
+module "lambda_functions" {
+  source = "./lambdas"
 }
 
 module "connect" {

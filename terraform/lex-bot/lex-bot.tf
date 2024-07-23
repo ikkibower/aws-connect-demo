@@ -1,5 +1,5 @@
-module "lambda" {
-  source = "../lambda"
+module "lambdas" {
+  source = "../lambdas"
 }
 
 resource "aws_lexv2models_bot" "book_hotel_bot" {
@@ -13,7 +13,6 @@ resource "aws_lexv2models_bot" "book_hotel_bot" {
 }
 
 resource "aws_lexv2models_bot_locale" "book_hotel_bot_locale" {
-  # depends_on = [ aws_lexv2models_bot_version.book_hotel_bot_version ]
   bot_id                           = aws_lexv2models_bot.book_hotel_bot.id
   bot_version                      = "DRAFT"
   locale_id                        = "en_US"
@@ -35,12 +34,10 @@ resource "aws_lexv2models_bot_version" "book_hotel_bot_version" {
 }
 
 resource "aws_lexv2models_intent" "book_hotel_bot_intent" {
-  depends_on = [aws_lexv2models_bot_locale.book_hotel_bot_locale]
-  bot_id     = aws_lexv2models_bot.book_hotel_bot.id
-  # bot_version = aws_lexv2models_bot_version.book_hotel_bot_version.bot_version
+  depends_on  = [aws_lexv2models_bot_locale.book_hotel_bot_locale]
+  bot_id      = aws_lexv2models_bot.book_hotel_bot.id
   bot_version = "DRAFT"
-  # locale_id   = aws_lexv2models_bot_locale.book_hotel_bot_locale.id
-  locale_id = "en_US"
+  locale_id   = "en_US"
 
   name        = "BookHotel"
   description = "Intent to book a hotel"

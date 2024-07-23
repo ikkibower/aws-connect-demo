@@ -2,8 +2,8 @@ locals {
   instance_alias = "ZWxsaW90dHN0ZXN0aW5zdGFuZQo"
 }
 
-module "lex_bot" {
-  source = "../lex-bot"
+module "lambdas" {
+  source = "../lambdas"
 }
 
 resource "aws_connect_instance" "test_connect_instance" {
@@ -15,35 +15,22 @@ resource "aws_connect_instance" "test_connect_instance" {
 
 
 
-resource "aws_connect_contact_flow" "example_contact_flow" {
-  instance_id = aws_connect_instance.test_connect_instance.id
-  name        = "ExampleContactFlow"
-  description = "Example contact flow"
-  content     = <<EOF
-{
-  "Version": "2019-10-31",
-  "StartAction": {
-    "ActionType": "ConnectBot",
-    "Parameters": {
-      "BotAliasArn": "${module.lex_bot.lex_bot_arn}"
-    }
-  }
-}
-EOF
-}
-
 resource "aws_connect_phone_number" "test_tfn" {
   target_arn   = aws_connect_instance.test_connect_instance.arn
   country_code = "US"
   type         = "DID"
-  prefix       = "+18005"
+  prefix       = "+1657"
+}
+
+resource "aws_connect_lambda_function_association" "flow_invocation_lambda_connect_association" {
+  function_arn = module.lambdas.flow_invocation_lambda_invoke_arn
+  instance_id  = aws_connect_instance.test_connect_instance.id
 }
 
 output "connect_instance_id" {
   value = aws_connect_instance.test_connect_instance.id
 }
 
-output "contact_flow_id" {
-  value = aws_connect_contact_flow.example_contact_flow.id
+output "connect_instance_arn" {
+  value = aws_connect_instance.test_connect_instance.arn
 }
-
