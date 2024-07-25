@@ -1,3 +1,7 @@
+module "s3" {
+  source = "../s3"
+}
+
 resource "aws_lambda_function" "book_hotel_lambda" {
   filename         = "../lambdas/book-hotel/lambda.zip"
   function_name    = "BookHotelLambda"
@@ -19,11 +23,19 @@ resource "aws_lambda_function" "flow_invocation_lambda" {
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.11"
   source_code_hash = filebase64sha256("../lambdas/flow-invocation/lambda.zip")
+  layers = [aws_lambda_layer_version.flow_invocation_lambda_layer.arn]
   environment {
     variables = {
-      test = "test"
+      DYNAMODB_TABLE = "hotel-bookings"
     }
   }
+}
+
+resource "aws_lambda_layer_version" "flow_invocation_lambda_layer" {
+  layer_name          = "flow_invocation_layer"
+  s3_bucket           = module.s3.flow_invocation_lambda_bucket
+  s3_key              = module.s3.flow_invocation_lambda_layer_zip
+  compatible_runtimes = ["python3.8", "python3.9", "python3.11"]
 }
 
 resource "aws_iam_role" "lambda_exec" {

@@ -22,3 +22,10 @@ lint:
 	cd lambdas/book-hotel
 	ruff check
 	cd ..
+create-flow-invocation-lambda-layer:
+	cd lambdas/flow-invocation; \
+	mkdir -p lambda_layer/python; \
+	pip install -r requirements.txt -t lambda_layer/python; \
+	zip -r lambda_layer.zip lambda_layer;  \
+	rm -rf lambda_layer; \
+	cd ../../
